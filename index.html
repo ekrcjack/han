@@ -135,6 +135,19 @@
     opacity: 0.75;
   }
 
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 5px;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    padding: 10px 0;
+    background: var(--paper);
+  }
+
   .drawer-toggle {
     display: inline-flex;
     align-items: center;
@@ -147,11 +160,8 @@
     font-size: 13.5px;
     font-family: 'Noto Sans TC', sans-serif;
     cursor: pointer;
-    margin-bottom: 18px;
+    flex: 0 0 auto;
     transition: background .15s, color .15s;
-    position: sticky;
-    top: 12px;
-    z-index: 20;
     box-shadow: 0 4px 14px rgba(0,0,0,0.12);
   }
   .drawer-toggle:hover {
@@ -176,9 +186,9 @@
   }
 
   header.page-head {
-    margin-bottom: 24px;
+    margin-bottom: 5px;
     border-bottom: 2px solid var(--indigo);
-    padding-bottom: 16px;
+    padding-bottom: 5px;
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
@@ -189,7 +199,7 @@
   h1 {
     font-family: 'Noto Serif JP', serif;
     font-weight: 700;
-    font-size: 17px;
+    font-size: 13px;
     margin: 0;
     color: var(--indigo);
     letter-spacing: 0.03em;
@@ -206,7 +216,7 @@
 
   #current-grade-label {
     font-family: 'Noto Serif JP', serif;
-    font-size: 15px;
+    font-size: 12px;
     color: var(--shu);
     font-weight: 600;
   }
@@ -492,15 +502,17 @@
   <div class="drawer-backdrop" id="backdrop"></div>
 
   <main>
-    <button class="drawer-toggle" id="drawerToggle">☰ 選擇年級</button>
+    <div class="topbar">
+      <button class="drawer-toggle" id="drawerToggle">☰ 選擇年級</button>
+      <div class="toolbar">
+        <input type="search" id="search" placeholder="搜尋漢字／讀音／字義…">
+        <span class="count-badge" id="count-badge"></span>
+      </div>
+    </div>
 
     <header class="page-head">
       <div>
         <h1>目前顯示：<span id="current-grade-label"></span></h1>
-      </div>
-      <div class="toolbar">
-        <input type="search" id="search" placeholder="搜尋漢字／讀音／字義…">
-        <span class="count-badge" id="count-badge"></span>
       </div>
     </header>
 
