@@ -189,8 +189,8 @@
   h1 {
     font-family: 'Noto Serif JP', serif;
     font-weight: 700;
-    font-size: 26px;
-    margin: 0 0 4px;
+    font-size: 17px;
+    margin: 0;
     color: var(--indigo);
     letter-spacing: 0.03em;
   }
@@ -242,9 +242,8 @@
     background: var(--card);
     border: 1px solid var(--rule);
     border-radius: 10px;
-    overflow: hidden;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    max-height: 70vh;
+    overflow-y: auto;
   }
 
   table {
@@ -261,10 +260,12 @@
     text-align: left;
     padding: 10px 14px;
     position: sticky;
-    top: 60px;
+    top: 0;
     font-size: 12.5px;
     letter-spacing: 0.03em;
   }
+  thead tr:first-child th:first-child { border-top-left-radius: 10px; }
+  thead tr:first-child th:last-child { border-top-right-radius: 10px; }
 
   tbody tr {
     border-bottom: 1px solid var(--rule);
@@ -285,10 +286,15 @@
 
   td.kanji {
     font-family: 'Noto Serif JP', serif;
-    font-size: 26px;
     font-weight: 600;
     color: var(--indigo);
     width: 56px;
+    text-align: center;
+  }
+  .kanji-char {
+    display: block;
+    font-size: 20px;
+    line-height: 1.1;
   }
 
   td.on {
@@ -298,24 +304,11 @@
   }
 
   td.sentence {
-  }
-
-  .sentence-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    min-width: 0;
-  }
-
-  .sentence-row > div {
-    min-width: 0;
-    flex: 1 1 auto;
     overflow-wrap: break-word;
     word-break: break-word;
   }
 
   button.play-btn {
-    flex: 0 0 auto;
     width: 30px;
     height: 30px;
     border-radius: 50%;
@@ -323,12 +316,12 @@
     background: var(--paper);
     color: var(--indigo);
     cursor: pointer;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     font-size: 13px;
     transition: background .15s, color .15s, transform .1s;
-    margin-top: 1px;
+    margin: 8px auto 0;
   }
   button.play-btn:hover {
     background: var(--indigo);
@@ -415,7 +408,8 @@
     td.zh, thead th:nth-child(5) { font-size: 12px; width: 120px !important; }
     thead th { font-size: 11px; padding: 8px 6px; }
     td { padding: 8px 6px; }
-    td.kanji { font-size: 22px; width: 40px; }
+    td.kanji { width: 44px; }
+    .kanji-char { font-size: 18px; }
     .sentence-text { font-size: 13.5px; }
     .romaji { font-size: 11px; }
     .zh-meaning { font-size: 12px; }
@@ -488,9 +482,7 @@
 
     <header class="page-head">
       <div>
-        <h1>常用漢字（Jōyō Kanji）2,136 字
-          <small>目前顯示：<span id="current-grade-label"></span></small>
-        </h1>
+        <h1>目前顯示：<span id="current-grade-label"></span></h1>
       </div>
       <div class="toolbar">
         <input type="search" id="search" placeholder="搜尋漢字／讀音／字義…">
@@ -558,16 +550,14 @@ function render() {
   const html = rows.map((d, i) => `
     <tr>
       <td class="no">${d.no}</td>
-      <td class="kanji">${d.k}</td>
+      <td class="kanji">
+        <span class="kanji-char">${d.k}</span>
+        <button class="play-btn" data-text="${escapeHtml(d.s)}" title="播放語音" onclick="playSentence(this)">&#9658;</button>
+      </td>
       <td class="on">${escapeHtml(d.on)}</td>
       <td class="sentence">
-        <div class="sentence-row">
-          <button class="play-btn" data-text="${escapeHtml(d.s)}" title="播放語音" onclick="playSentence(this)">&#9658;</button>
-          <div>
-            <span class="sentence-text">${escapeHtml(d.s)}</span>
-            <span class="romaji">${escapeHtml(d.r)}</span>
-          </div>
-        </div>
+        <span class="sentence-text">${escapeHtml(d.s)}</span>
+        <span class="romaji">${escapeHtml(d.r)}</span>
       </td>
       <td class="zh">
         <span class="zh-meaning">${escapeHtml(d.z)}</span>
@@ -576,6 +566,14 @@ function render() {
     </tr>
   `).join('');
   tbody.innerHTML = html;
+
+  // 強制重新計算版面：table 內容動態塞入後，thead 的 position:sticky
+  // 有時不會自動重新定位，讀取一次 offsetHeight 觸發 reflow 來修正。
+  document.querySelectorAll('thead th').forEach(th => {
+    th.style.position = 'static';
+    void th.offsetHeight;
+    th.style.position = 'sticky';
+  });
 }
 
 // ---------- Speech ----------
