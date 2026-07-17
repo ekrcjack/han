@@ -281,14 +281,28 @@
   td.no {
     color: var(--ink-soft);
     font-variant-numeric: tabular-nums;
-    width: 40px;
+  }
+  /* # 欄：編號最多三位數（各年級 1～200），寬度只需包住三位數字 */
+  td.no, thead th.col-no {
+    width: 32px;
+    padding-left: 3px;
+    padding-right: 3px;
+    white-space: nowrap;
+    text-align: center;
   }
 
   td.kanji {
     font-family: 'Noto Serif JP', serif;
     font-weight: 600;
     color: var(--indigo);
-    width: 56px;
+    text-align: center;
+  }
+  /* 漢字欄：寬度只需包住漢字字元、播放鈕與「漢字」標題 */
+  td.kanji, thead th.col-kanji {
+    width: 32px;
+    padding-left: 3px;
+    padding-right: 3px;
+    white-space: nowrap;
     text-align: center;
   }
   .kanji-char {
@@ -309,8 +323,8 @@
   }
 
   button.play-btn {
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     border: 1px solid var(--indigo-soft);
     background: var(--paper);
@@ -319,9 +333,9 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
+    font-size: 9px;
     transition: background .15s, color .15s, transform .1s;
-    margin: 8px auto 0;
+    margin: 6px auto 0;
   }
   button.play-btn:hover {
     background: var(--indigo);
@@ -408,7 +422,7 @@
     td.zh, thead th:nth-child(5) { font-size: 12px; width: 120px !important; }
     thead th { font-size: 11px; padding: 8px 6px; }
     td { padding: 8px 6px; }
-    td.kanji { width: 44px; }
+    td.kanji, thead th.col-kanji { width: 32px; }
     .kanji-char { font-size: 18px; }
     .sentence-text { font-size: 13.5px; }
     .romaji { font-size: 11px; }
@@ -496,8 +510,8 @@
       <table>
         <thead>
           <tr>
-            <th style="width:40px">#</th>
-            <th style="width:56px">漢字</th>
+            <th class="col-no">#</th>
+            <th class="col-kanji">漢字</th>
             <th style="width:190px">音讀（平假名／羅馬拼音）</th>
             <th>例句（▶ 播放語音）</th>
             <th style="width:190px">中文</th>
