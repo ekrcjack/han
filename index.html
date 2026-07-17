@@ -428,7 +428,6 @@
   @media (max-width: 760px) {
     main { padding: 20px 16px 60px; }
     .toolbar input[type="search"] { width: 150px; }
-    td.on, thead th:nth-child(3) { display: none; }
     td.zh, thead th:nth-child(5) { font-size: 12px; width: 120px !important; }
     thead th { font-size: 11px; padding: 8px 6px; }
     td { padding: 8px 6px; }
@@ -438,6 +437,14 @@
     .romaji { font-size: 11px; }
     .zh-meaning { font-size: 12px; }
     .sent-zh { font-size: 11px; }
+    /* 小螢幕上表頭只留「音讀」二字 */
+    .on-sub { display: none; }
+    td.on, thead th.col-on { width: auto; font-size: 12px; }
+  }
+
+  /* 手機直式空間不足時隱藏音讀欄；橫式（橫看）時顯示 */
+  @media (max-width: 760px) and (orientation: portrait) {
+    td.on, thead th.col-on { display: none; }
   }
 </style>
 </head>
@@ -524,7 +531,7 @@
           <tr>
             <th class="col-no">#</th>
             <th class="col-kanji">漢字</th>
-            <th style="width:190px">音讀（平假名／羅馬拼音）</th>
+            <th class="col-on" style="width:190px">音讀<span class="on-sub">（平假名／羅馬拼音）</span></th>
             <th>例句（▶ 播放語音）</th>
             <th style="width:190px">中文</th>
           </tr>
