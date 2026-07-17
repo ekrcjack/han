@@ -454,6 +454,10 @@
   <aside class="drawer" id="drawer">
     <div class="drawer-title">常用漢字表</div>
     <div class="tabs" id="tabs">
+<button class="tab" data-grade="all" style="--tab-color:#2A2620">
+          <span class="tab-label">全部</span>
+          <span class="tab-count">2136</span>
+        </button>
 <div class="tab-section-label">小學</div>
 <button class="tab" data-grade="1" style="--tab-color:#8C6B3F">
           <span class="tab-label">小一</span>
@@ -566,11 +570,13 @@ function escapeHtml(str) {
 
 function render() {
   const q = currentQuery.trim();
-  const rows = DATA.filter(d => d.g === currentGrade && (
+  const rows = DATA.filter(d => (currentGrade === 'all' || d.g === currentGrade) && (
     !q || d.k.includes(q) || d.on.includes(q) || d.z.includes(q) || d.s.includes(q) || d.sz.includes(q)
   ));
 
-  gradeLabel.textContent = GRADE_NAMES[currentGrade] + '（共 ' + DATA.filter(d=>d.g===currentGrade).length + ' 字）';
+  gradeLabel.textContent = currentGrade === 'all'
+    ? '全部漢字（共 ' + DATA.length + ' 字）'
+    : GRADE_NAMES[currentGrade] + '（共 ' + DATA.filter(d=>d.g===currentGrade).length + ' 字）';
   countBadge.textContent = q ? ('符合 ' + rows.length + ' 字') : '';
 
   if (rows.length === 0) {
@@ -651,7 +657,8 @@ tabs.forEach(tab => {
   tab.addEventListener('click', () => {
     tabs.forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
-    currentGrade = parseInt(tab.getAttribute('data-grade'), 10);
+    const g = tab.getAttribute('data-grade');
+    currentGrade = (g === 'all') ? 'all' : parseInt(g, 10);
     searchInput.value = "";
     currentQuery = "";
     render();
@@ -675,8 +682,9 @@ searchInput.addEventListener('input', (e) => {
   render();
 });
 
-// init
-tabs[0].classList.add('active');
+// init：依目前年級標示對應分頁（預設小學一年級）
+const initTab = [...tabs].find(t => t.getAttribute('data-grade') === String(currentGrade)) || tabs[0];
+initTab.classList.add('active');
 render();
 </script>
 </body>
